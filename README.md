@@ -1,137 +1,89 @@
 Feature Engineering – Fake News Detection Dataset
-📘 Overview
 
-This project applies several feature engineering techniques on a text dataset to prepare it for machine learning.
-We use the Fake News Detection Dataset from Kaggle:
+This project demonstrates basic feature engineering techniques on the Fake News Detection dataset from Kaggle.
+The goal is to convert raw news text into meaningful numerical features suitable for machine learning.
+Dataset link: https://www.kaggle.com/datasets/emineyetm/fake-news-detection-datasets
 
-🔗 Dataset Link: https://www.kaggle.com/datasets/emineyetm/fake-news-detection-datasets
+Dataset
+Two CSV files are used: True.csv and Fake.csv.
+Labels are assigned as:
+0 – True (real news)
+1 – Fake
 
-The dataset contains real and fake news articles.
-We combine them and extract useful numerical features using text-processing methods.
+Columns included: title, text, subject, date (and label added).
+Total records: around 44,898.
 
-📂 Dataset Information
+Steps Performed
 
-We use two CSV files:
+Data Loading & Merging
+– Loaded True.csv and Fake.csv.
+– Added labels.
+– Combined both files into one dataset.
 
-Fake.csv → Fake news
+Data Cleaning
+– Filled missing values with blank string.
+– Converted all text to lowercase.
+– Created a new column “combined” by merging title and text for better meaning.
 
-True.csv → Real news
+Label Encoding
+– Encoded the target label into numeric form using LabelEncoder.
 
-A new label column is added:
+One-Hot Encoding
+– Subject column was transformed using one-hot encoding so each subject becomes a separate binary column.
 
-1 → Fake
+TF-IDF Feature Extraction
+– Applied TF-IDF vectorizer to the “combined” text.
+– Limited vocabulary to 1000 features for performance and memory efficiency.
 
-0 → True
+Simple Numeric Feature
+– Added a new column “text_len” that stores the length of the combined text.
 
-Columns available:
+Combining All Features
+– Used NumPy to merge one-hot encoded features, text_len, and TF-IDF vectors into a single feature matrix.
 
-title
+Variance Threshold
+– Removed features with extremely low variance using VarianceThreshold.
+– Helps remove columns that do not contribute meaningful information.
 
-text
+Chi-Square Feature Selection
+– Selected the top 500 most important features using chi-square test.
+– Reduces dimensionality while keeping important text-related features.
 
-subject
+Train-Test Split
+– Split the data into 80% training and 20% testing.
 
-date
+Example Output Printed by the Code
+– First few rows of raw dataset
+– First few rows after text cleaning
+– Subject one-hot encoding preview
+– Shapes after TF-IDF
+– Shapes after feature selection
+– Train and test shapes
 
-label (added manually)
-
-Total rows: ~44,898
-
-⚙️ Feature Engineering Steps
-1. Data Loading
-
-Load True.csv and Fake.csv
-
-Add labels
-
-Merge into one DataFrame
-
-Print first few rows
-
-2. Data Cleaning
-
-Convert text to lowercase
-
-Combine title + text into combined
-
-Drop empty rows
-
-Print sample rows after cleaning
-
-3. TF-IDF Vectorization
-
-We convert text into numerical values using:
-
-TfidfVectorizer(max_features=1000, stop_words="english")
-
-
-Produces a matrix of (rows × 1000)
-
-Print shape and sample transformed rows
-
-4. Variance Threshold
-
-Remove features with very low variance:
-
-VarianceThreshold(threshold=0.0001)
-
-
-Removes uninformative features
-
-Print new shape
-
-5. Chi-Square Feature Selection
-
-Select top 500 most important text features:
-
-SelectKBest(chi2, k=500)
-
-
-Keeps only meaningful features
-
-Print new shape
-
-6. Train–Test Split
-
-Split final features:
-
-80% Training
-
-20% Testing
-
-Print final shapes.
-
-📊 Output (example)
-
-Your script prints:
-
-Full features: (44898, 1000)
-After variance threshold: (44898, XXXX)
+Final shapes expected:
+Full features: (44898, 1009)
+After variance threshold: (44898, 1009)
 After chi-square: (44898, 500)
 Train: (35918, 500)
 Test: (8980, 500)
 
-
-Plus sample dataset rows after each step.
-
-🧩 Libraries Used
-
+Libraries Used
 pandas
-
 numpy
-
 scikit-learn
 
-Install dependencies:
+How to Run
 
-pip install pandas numpy scikit-learn
+Download Fake.csv and True.csv from Kaggle.
 
-▶️ How to Run
+Place them in the same folder as the Python script.
 
-Download dataset from Kaggle
+Update the path in the script as needed.
 
-Place True.csv and Fake.csv in the project folder
+Run the program using: python main.py
+You will see dataset examples and transformation steps printed in the console.
 
-Run:
-
-python main.py
+Ethics
+This dataset contains only text-based news articles and does not include personal attributes such as gender, age, or marital status.
+Models built on such text data are free from demographic bias.
+If using personal data in the future, sensitive features must be removed or anonymized to avoid discrimination.
