@@ -1,63 +1,137 @@
-# feature-engineering
-#https://www.kaggle.com/datasets/emineyetm/fake-news-detection-datasets
+Feature Engineering – Fake News Detection Dataset
+📘 Overview
 
-## 📘 Overview
-This project demonstrates various **Feature Engineering techniques** applied to a text-based dataset.  
-The chosen dataset is the **Fake News Detection Dataset** from Kaggle, containing real and fake news articles.  
-The goal is to transform raw textual data into informative numerical features suitable for machine learning models.
+This project applies several feature engineering techniques on a text dataset to prepare it for machine learning.
+We use the Fake News Detection Dataset from Kaggle:
 
----
+🔗 Dataset Link: https://www.kaggle.com/datasets/emineyetm/fake-news-detection-datasets
 
-## 📂 Dataset Information
-**Dataset:** Fake News Detection (Kaggle)  
-**Total Records:** 44,898  
-**Columns:**
-- `title` — Headline of the article  
-- `text` — Full content of the news  
-- `subject` — Category or topic of the article  
-- `date` — Date of publication  
-- `label` — Target variable (1 = Fake, 0 = True)
+The dataset contains real and fake news articles.
+We combine them and extract useful numerical features using text-processing methods.
 
-The dataset was combined from two CSV files: `True.csv` and `Fake.csv`.
+📂 Dataset Information
 
----
+We use two CSV files:
 
-## ⚙️ Steps Performed
+Fake.csv → Fake news
 
-### 1. Data Loading & Exploration
-- Loaded both CSV files (`True.csv`, `Fake.csv`).
-- Added target labels (0 for True, 1 for Fake).
-- Checked data structure and verified no missing values.
+True.csv → Real news
 
-### 2. Data Cleaning
-- Converted text to lowercase.
-- Combined `title` and `text` columns into a single column called `combined` for richer meaning.
+A new label column is added:
 
-### 3. Text Encoding
-- Used **TF-IDF Vectorization** to convert text into numerical format.
-- Limited vocabulary size to 1000 features for efficiency.
+1 → Fake
 
-### 4. Feature Scaling
-- Applied **StandardScaler** to standardize all numeric features (mean = 0, std = 1).
+0 → True
 
-### 5. Feature Extraction
-- Performed **Principal Component Analysis (PCA)** to reduce dimensions from 1000 → 50 components.
+Columns available:
 
-### 6. Feature Selection
-- Used **Variance Threshold** to remove low-variance (uninformative) features.
+title
 
-### 7. Final Dataset
-- The final dataset consists of 50 meaningful components.
-- Split into 80% training and 20% testing data.
+text
 
----
+subject
 
-## 🧩 Libraries Used
-- `pandas` — Data handling  
-- `numpy` — Numerical operations  
-- `scikit-learn` — TF-IDF, PCA, scaling, and feature selection  
-- `matplotlib`, `seaborn` — Visualization  
+date
 
-To install all dependencies:
-```bash
-pip install pandas numpy scikit-learn matplotlib seaborn
+label (added manually)
+
+Total rows: ~44,898
+
+⚙️ Feature Engineering Steps
+1. Data Loading
+
+Load True.csv and Fake.csv
+
+Add labels
+
+Merge into one DataFrame
+
+Print first few rows
+
+2. Data Cleaning
+
+Convert text to lowercase
+
+Combine title + text into combined
+
+Drop empty rows
+
+Print sample rows after cleaning
+
+3. TF-IDF Vectorization
+
+We convert text into numerical values using:
+
+TfidfVectorizer(max_features=1000, stop_words="english")
+
+
+Produces a matrix of (rows × 1000)
+
+Print shape and sample transformed rows
+
+4. Variance Threshold
+
+Remove features with very low variance:
+
+VarianceThreshold(threshold=0.0001)
+
+
+Removes uninformative features
+
+Print new shape
+
+5. Chi-Square Feature Selection
+
+Select top 500 most important text features:
+
+SelectKBest(chi2, k=500)
+
+
+Keeps only meaningful features
+
+Print new shape
+
+6. Train–Test Split
+
+Split final features:
+
+80% Training
+
+20% Testing
+
+Print final shapes.
+
+📊 Output (example)
+
+Your script prints:
+
+Full features: (44898, 1000)
+After variance threshold: (44898, XXXX)
+After chi-square: (44898, 500)
+Train: (35918, 500)
+Test: (8980, 500)
+
+
+Plus sample dataset rows after each step.
+
+🧩 Libraries Used
+
+pandas
+
+numpy
+
+scikit-learn
+
+Install dependencies:
+
+pip install pandas numpy scikit-learn
+
+▶️ How to Run
+
+Download dataset from Kaggle
+
+Place True.csv and Fake.csv in the project folder
+
+Run:
+
+python main.py
